@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:hris_mobile/business/common/loading_status.dart';
 
 class LoginState {

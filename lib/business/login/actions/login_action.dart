@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:async_redux/async_redux.dart';
+import 'package:hris_mobile/business/api/hris_api.dart';
 import 'package:hris_mobile/business/app/app_state.dart';
 import 'package:hris_mobile/business/common/loading_status.dart';
 import 'package:hris_mobile/business/login/models/login_state.dart';
@@ -19,6 +20,8 @@ class LoginAction extends ReduxAction<AppState>{
   final String passWord;
   final bool rememberMe;
 
+  LoginAction({this.userName, this.passWord, this.rememberMe});
+
   /*
   Sometimes, while an async reducer is running, you want to prevent the user from touching the screen.
   Also, sometimes you want to check preconditions like the presence of an internet connection,
@@ -36,8 +39,15 @@ class LoginAction extends ReduxAction<AppState>{
 
   @override
   Future<AppState> reduce() async{
-    // send login API to server from here
-    return state.copyWith(LoginState(loadingStatus: LoadingStatus.success));
+    HrisAPI api = HrisAPI();
+    try{
+      await api.signIn(userName, passWord, rememberMe);
+      return state.copyWith(LoginState(loadingStatus: LoadingStatus.success));
+    }catch(err){
+      return state.copyWith(LoginState(loadingStatus: LoadingStatus.error, error: err.toString()));
+    }
+
+
   }
 
 
@@ -46,7 +56,7 @@ class LoginAction extends ReduxAction<AppState>{
 
   }
 
-  LoginAction({this.userName, this.passWord, this.rememberMe});
+
 
 
 }

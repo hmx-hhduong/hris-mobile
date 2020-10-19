@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:hris_mobile/business/login/models/login_state.dart';
 
 class AppState {
