@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:async_redux/async_redux.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hris_mobile/business/api/hris_api.dart';
 import 'package:hris_mobile/business/app/app_state.dart';
 import 'package:hris_mobile/business/common/loading_status.dart';
@@ -40,9 +41,12 @@ class LoginAction extends ReduxAction<AppState>{
   @override
   Future<AppState> reduce() async{
     HrisAPI api = HrisAPI();
+    final storage = new FlutterSecureStorage();
+
     try{
-      await api.signIn(userName, passWord, rememberMe);
-      return state.copyWith(LoginState(loadingStatus: LoadingStatus.success));
+      var signResponse = await api.signIn(userName, passWord, rememberMe);
+      await storage.write(key: 'token', value: signResponse.token);
+      dispatch(NavigateAction.pushReplacementNamed("/home"));
     }catch(err){
       return state.copyWith(LoginState(loadingStatus: LoadingStatus.error, error: err.toString()));
     }
