@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "59459541555",
+    "firebase_url": "https://hris-9bad5.firebaseio.com",
+    "project_id": "hris-9bad5",
+    "storage_bucket": "hris-9bad5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59459541555:android:8d7fd47c53e09c314ee146",
+        "android_client_info": {
+          "package_name": "com.example.hris_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "59459541555-33ms4vode7qubktjog10uru7gu92u55i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc3G4dmCZnSIfIXK8SmgfQ34oPSLI-FOk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "59459541555-33ms4vode7qubktjog10uru7gu92u55i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
