@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:async_redux/async_redux.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hris_mobile/business/api/hris_api.dart';
 import 'package:hris_mobile/business/app/app_state.dart';
+import 'package:hris_mobile/business/common/loading_action.dart';
 import 'package:hris_mobile/business/common/loading_status.dart';
 import 'package:hris_mobile/business/login/models/login_state.dart';
+import 'package:hris_mobile/business/utils/utils.dart';
 
 /*
 The reducer has direct access to:
@@ -15,8 +18,7 @@ The action state itself (the class fields, passed to the action when it was inst
 The dispatch method, so that other actions may be dispatched from the reducer.
 
  */
-class LoginAction extends ReduxAction<AppState>{
-
+class LoginAction extends ReduxAction<AppState> {
   final String userName;
   final String passWord;
   final bool rememberMe;
@@ -32,35 +34,30 @@ class LoginAction extends ReduxAction<AppState>{
   ReduxAction.after(), which run respectively before and after the reducer.
   ReduxAction.before() and ReduxAction.after() can return FutureOr<Function>
    */
-  @override
-  void before(){
-    // check internet action then show loading for now only show loading
 
+  @override
+  Future<void> before() async {
+    await checkInternetConnection();
+    dispatch(LoadingAction(true));
   }
 
   @override
-  Future<AppState> reduce() async{
+  Future<AppState> reduce() async {
+
     HrisAPI api = HrisAPI();
     final storage = new FlutterSecureStorage();
-
-    try{
+    print('Monica LoginAction reduce() ');
+    try {
       var signResponse = await api.signIn(userName, passWord, rememberMe);
       await storage.write(key: 'token', value: signResponse.token);
       dispatch(NavigateAction.pushReplacementNamed("/home"));
-    }catch(err){
-      return state.copyWith(LoginState(loadingStatus: LoadingStatus.error, error: err.toString()));
+      return state.copyWith(loginState: LoginState(loadingStatus: LoadingStatus.success));
+    } catch (err) {
+      return state.copyWith(loginState: LoginState(
+          loadingStatus: LoadingStatus.error, error: err.toString()));
     }
-
-
   }
-
 
   @override
-  void after() {
-
-  }
-
-
-
-
+  void after() => dispatch(LoadingAction(false));
 }
